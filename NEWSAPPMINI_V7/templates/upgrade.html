@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upgrade to Paid Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+{% include 'header_nav.html' %} 
+
+<div class="container" style="max-width: 600px; text-align: center;">
+    <div class="title" style="color: red;">Upgrade Payment Gateway</div>
+    
+    <div class="card" style="padding: 40px; border: 3px solid var(--primary);">
+        <h3 style="color: var(--primary);">🏗️ Payment Gateway Under Construction 🚧</h3>
+        
+        <p style="font-size: 1.1em; margin-bottom: 30px;">
+            Thank you for your interest in upgrading to the **Paid Plan**!
+        </p>
+        
+        <p>
+            Our secure payment processing system is currently being integrated. Please check back soon to finalize your upgrade and unlock 10 results per search.
+        </p>
+
+        <p style="margin-top: 30px;">
+            In the meantime, you can contact the site administrator directly to arrange an upgrade.
+        </p>
+
+        <a href="{{ url_for('dashboard') }}">
+            <button style="background: gray; margin-top: 20px;">
+                ← Back to Dashboard
+            </button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

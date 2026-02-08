@@ -1,0 +1,19 @@
+<header class="header">
+    <div class="header-content">
+        <div class="logo"><a href="{{ url_for('index') }}">📰 TrendiFY</a></div>
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            {% if session.get('user_id') %}
+                {% if session.get('role') == 'admin' %}
+                    <a href="{{ url_for('admin_panel') }}">Admin Panel</a>
+                {% else %}
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}">Logout ({{ session.get('name') }})</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('signup') }}">Signup</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

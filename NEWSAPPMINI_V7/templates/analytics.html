@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+{% include 'header_nav.html' %} 
+
+<div class="container" style="text-align: left;">
+    <div class="title">📈 Search Analytics</div>
+
+    <div class="dashboard-grid">
+        
+        <div class="card">
+            <h3>Daily Searches (Last 7 Days)</h3>
+            <table style="width: 100%;">
+                <thead><tr style="background: #e9ecef; color: var(--text);"><th style="padding: 8px;">Date</th><th style="padding: 8px; text-align: right;">Searches</th></tr></thead>
+                <tbody>
+                    {% for day in daily_searches %}
+                        <tr><td style="padding: 5px;">{{ day.search_date.strftime('%Y-%m-%d') }}</td><td style="padding: 5px; text-align: right;">{{ day.total_searches }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Most Searched Topics (Top 10)</h3>
+            <ol style="padding-left: 20px;">
+                {% for topic in most_searched %}
+                    <li style="margin-bottom: 5px;">**{{ topic.topic }}** ({{ topic.topic_count }} searches)</li>
+                {% endfor %}
+            </ol>
+        </div>
+        
+        <div class="card">
+            <h3>Top Active Users (Top 10)</h3>
+            <ol style="padding-left: 20px;">
+                {% for user in top_users %}
+                    <li style="margin-bottom: 5px;">**{{ user.name }}** ({{ user.search_count }} searches)</li>
+                {% endfor %}
+            </ol>
+        </div>
+
+    </div>
+    
+    <h3 style="margin-top: 40px;">Track Searches (Recent Activity)</h3>
+    <div class="card" style="padding: 0;">
+        <table style="width: 100%; border-collapse: collapse; margin: 0;">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">User</th>
+                    <th style="width: 35%;">Topic</th>
+                    <th style="width: 15%;">Articles Shown</th>
+                    <th style="width: 30%;">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for search in recent_searches %}
+                <tr style="text-align: center;">
+                    <td>{{ search.name }}</td>
+                    <td>{{ search.topic }}</td>
+                    <td>{{ search.articles_shown }}</td>
+                    <td>{{ search.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

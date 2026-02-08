@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI News Explorer - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body data-logged-in="{{ 'true' if session.get('user_id') else 'false' }}">
+
+{% include 'header_nav.html' %}
+
+    <div class="container">
+        <div class="title">AI News Explorer</div>
+
+        {% if not session.get('user_id') %}
+            <p class="card" style="background: #e9f0f9; color: var(--primary); text-align: center;">
+                Please <b>Login</b> to search for news and videos.
+            </p>
+        {% endif %}
+
+        <!-- NEWS SEARCH SECTION -->
+        <h2 class="section-title">Search News</h2>
+        <div class="search-area">
+            <input type="text" id="topic" placeholder="Search topic…" {% if not session.get('user_id') %}disabled{% endif %}>
+            
+            <select id="sort" {% if not session.get('user_id') %}disabled{% endif %}>
+                <option value="publishedAt">Latest</option>
+                <option value="popularity">Popularity</option>
+                <option value="relevancy">Relevancy</option>
+            </select>
+
+            <button id="searchBtn" {% if not session.get('user_id') %}disabled{% endif %}>Search</button>
+        </div>
+
+        <!-- VIDEO SEARCH SECTION -->
+        <h2 class="section-title" style="margin-top:40px;">Search Videos</h2>
+        <div class="search-area">
+            <input type="text" id="videoTopic" placeholder="Search videos…" {% if not session.get('user_id') %}disabled{% endif %}>
+            <button id="videoSearchBtn" {% if not session.get('user_id') %}disabled{% endif %}>Search Videos</button>
+        </div>
+
+        <div id="loader" style="display: none; margin-top: 20px;">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="newsContainer" class="news-container"></div>
+
+        <!-- VIDEO RESULTS -->
+        <div id="videoContainer" class="news-container"></div>
+
+    </div>
+    
+    <script src="/static/main.js"></script>
+
+    <!-- VIDEO SEARCH SCRIPT -->
+    <script>
+        document.getElementById("videoSearchBtn").addEventListener("click", async () => {
+            const q = document.getElementById("videoTopic").value.trim();
+            const container = document.getElementById("videoContainer");
+
+            if (!q) return alert("Enter video search keyword");
+
+            container.innerHTML = "<p>Loading...</p>";
+
+            try {
+                const res = await fetch(`/api/videos?topic=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                
+                if (data.error) {
+                    container.innerHTML = `<p style="color:red;">${data.error}</p>`;
+                    return;
+                }
+
+                container.innerHTML = data.map(v => `
+                    <div class="card">
+                        <img src="${v.thumbnail}" class="thumb">
+                        <h3>${v.title}</h3>
+                        <p>${v.channel}</p>
+                        <a href="${v.url}" target="_blank" class="btn">Watch Video</a>
+                    </div>
+                `).join("");
+
+            } catch (e) {
+                container.innerHTML = `<p style="color:red;">Error: ${e}</p>`;
+            }
+        });
+    </script>
+
+</body>
+</html>

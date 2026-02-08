@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+{% include 'header_nav.html' %} 
+
+<div class="container" style="text-align: left;">
+    <div class="title">👑 Admin Dashboard</div>
+    
+    {% set has_warnings = warnings and warnings|length > 0 %}
+    <div id="apiWarningAlert" data-has-warnings="{{ 'true' if has_warnings else 'false' }}">
+        {% if has_warnings %}
+        <div class="card" style="background: #f8d7da; color: #721c24; margin-bottom: 20px; border: 1px solid #f5c6cb; text-align: center; font-weight: 600;">
+            **⚠️ API WARNINGS FOUND**
+        </div>
+        {% endif %}
+    </div>
+
+    <h3>📊 Key Metrics</h3>
+    <div class="dashboard-grid">
+        <div class="card" style="text-align: center;"><h3>Total Users</h3><p style="font-size: 1.5em; font-weight: 700;">{{ stats.total_users }}</p></div>
+        <div class="card" style="text-align: center;"><h3>Free Users</h3><p style="font-size: 1.5em; font-weight: 700;">{{ stats.free_users }}</p></div>
+        <div class="card" style="text-align: center;"><h3>Paid Users</h3><p style="font-size: 1.5em; font-weight: 700;">{{ stats.paid_users }}</p></div>
+        <div class="card" style="text-align: center;"><h3>Searches Today</h3><p style="font-size: 1.5em; font-weight: 700;">{{ stats.total_searches_today or 0 }}</p></div>
+        <div class="card" style="text-align: center;"><h3>Articles Shown Today</h3><p style="font-size: 1.5em; font-weight: 700;">{{ stats.total_articles_shown_today or 0 }}</p></div>
+    </div>
+    
+    <h3 style="margin-top: 40px;">🔧 Management & Analytics</h3>
+    <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <a href="{{ url_for('manage_users') }}" class="card" style="text-align: center; text-decoration: none;">
+            <h4>Manage Users</h4>
+            <p>View, Delete, Change Plans</p>
+        </a>
+        <a href="{{ url_for('analytics') }}" class="card" style="text-align: center; text-decoration: none;">
+            <h4>View Analytics</h4>
+            <p>Search Tracking & Insights</p>
+        </a>
+        <div class="card">
+            <h4>API Warnings Log</h4>
+            <small>Latest 10 warnings</small>
+            <ul style="padding-left: 20px;">
+                {% for warning in warnings %}
+                    <li style="color: red; font-size: 0.9em; margin-bottom: 5px;">[{{ warning.timestamp.strftime('%Y-%m-%d %H:%M') }}] - {{ warning.warning_message[:50] }}...</li>
+                {% else %}
+                    <li>No recent warnings.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+<script src="/static/admin.js"></script>
+
+</body>
+</html>

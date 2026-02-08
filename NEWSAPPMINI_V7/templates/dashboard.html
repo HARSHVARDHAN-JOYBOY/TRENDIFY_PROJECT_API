@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body data-logged-in="{{ 'true' if session.get('user_id') else 'false' }}">
+
+{% include 'header_nav.html' %} 
+
+<div class="container">
+    <div class="title">👋 Welcome, {{ session.name }} ({{ session.plan | capitalize }} Plan)</div>
+    
+    <div class="card" style="margin-bottom: 30px; text-align: center;">
+        <h3>News Result Limit</h3>
+        <p>Your current plan allows you to see **{{ '10' if session.plan == 'paid' else '3' }}** results per search. You can search unlimited times.</p>
+        
+        {% if session.plan == 'free' %}
+            <p style="color: var(--primary); font-weight: 600; margin-bottom: 15px;">
+                Upgrade to Paid Plan for **10 results per search**!
+            </p>
+            <a href="{{ url_for('upgrade') }}">
+                <button style="background: var(--accent); padding: 10px 25px;">
+                    💳 Go to Upgrade Payment
+                </button>
+            </a>
+        {% else %}
+            <p style="color: green; font-weight: 600;">You have the Paid Plan. Enjoy 10 results per search!</p>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card" style="text-align: center;">
+            <h3>Quick Search</h3>
+            <div class="search-area" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="text" id="topic" placeholder="Search topic…">
+                <select id="sort">
+                    <option value="publishedAt">Latest</option>
+                    <option value="popularity">Popularity</option>
+                </select>
+                <button id="searchBtn">Search</button>
+            </div>
+            <div id="loader" style="display: none; margin-top: 10px;">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <div class="card" style="grid-column: span 1 / span 2;">
+            <h3 style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Saved Articles (Latest 5)</span> 
+                <a href="{{ url_for('saved_articles') }}" style="font-size: 14px; text-decoration: none;">View All →</a>
+            </h3>
+            
+            {% if saved_articles %}
+                <ul style="list-style: none; padding: 0;">
+                    {% for article in saved_articles %}
+                        <li style="margin-bottom: 8px;"><a href="{{ article.url }}" target="_blank">{{ article.title }}</a> <br><small>Source: {{ article.source }}</small></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You haven't saved any articles yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div id="newsContainer" class="news-container"></div>
+</div>
+<script src="/static/main.js"></script>
+
+</body>
+</html>

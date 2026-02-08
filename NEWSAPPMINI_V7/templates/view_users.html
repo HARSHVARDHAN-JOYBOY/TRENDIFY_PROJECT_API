@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Users</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        table { width:100%; border-collapse: collapse; }
+        th, td { padding:12px; border-bottom:1px solid #eee; text-align:center; }
+        th { background:#0b79d0; color:#fff; }
+        .btn { padding:6px 12px; border-radius:6px; color:#fff; border:none; cursor:pointer; font-weight:600; }
+        .btn-delete { background:#dc3545; }
+        .btn-paid { background:#28a745; }
+        .btn-free { background:#6c757d; }
+        td.left { text-align:left; padding-left:16px; }
+    </style>
+</head>
+<body>
+    {% include 'header_nav.html' %}
+    <div class="container">
+        <h2 style="margin-top:20px;">🧑‍💻 Manage Users</h2>
+
+        <div class="card" style="padding:0; margin-top:10px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th style="text-align:left;">Name</th>
+                        <th style="text-align:left;">Email</th>
+                        <th>Role</th>
+                        <th>Plan</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td class="left">{{ user.name }}</td>
+                        <td class="left">{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('change_plan', user_id=user.id) }}" style="display:inline;">
+                                <input type="hidden" name="new_plan" value="{{ 'paid' if user.plan == 'free' else 'free' }}">
+                                {% set next_plan = 'Paid' if user.plan == 'free' else 'Free' %}
+                                {% set btn_class = 'btn-paid' if user.plan == 'paid' else 'btn-free' %}
+                                <button type="submit" class="btn {{ btn_class }}">{{ user.plan | capitalize }} → {{ next_plan }}</button>
+                            </form>
+                        </td>
+                        <td>
+                            {% if user.role != 'admin' %}
+                                <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}" class="delete-user-form" data-user-name="{{ user.name }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-delete">Delete</button>
+                                </form>
+                            {% else %}
+                                <small>(Admin)</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>

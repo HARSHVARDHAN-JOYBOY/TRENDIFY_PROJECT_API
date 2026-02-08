@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Saved Articles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+{% include 'header_nav.html' %} 
+
+<div class="container">
+    <div class="title">My Saved Articles</div>
+
+    {% if articles %}
+        <div class="news-container">
+            {% for article in articles %}
+                <div class="news-item card">
+                    <div>
+                        <h3>{{ loop.index }}. {{ article.title }}</h3>
+                        <p>Source: {{ article.source }} | Saved: {{ article.published_date }}</p>
+                    </div>
+                    <div>
+                        <a href="{{ article.url }}" target="_blank">Read Article →</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="card" style="text-align: center;">You currently have no saved articles.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
